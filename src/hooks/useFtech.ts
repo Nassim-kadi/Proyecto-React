@@ -19,7 +19,7 @@ export const useFetch = <T>(url: string): Params<T> => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(url, controller);
+        const response = await fetch(url, { signal: controller.signal });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
