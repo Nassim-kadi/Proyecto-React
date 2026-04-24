@@ -1,46 +1,27 @@
 import { useEffect, useState } from "react";
-
 import "./App.css";
+import { useFetch } from "./hooks";
 
+const url = "https://api.example.com/data";
+
+interface Data {
+  name: string;
+  lasrtName: string;
+  age: number;
+}
 function App() {
-  const [data, setData] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("https://api.example.com/data");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const jsondata = await response.json();
-      setData(jsondata);
-    } catch (error) {
-      setError(error as string);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-
-    return () => {};
-  }, []);
-
-  if (isLoading) {
+  const { data, loading, error } = useFetch<Data>(url);
+  if (loading) {
     return <p>Loading...</p>;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p>{error.message}</p>;
   }
 
   return (
     <>
-      <h1>Hello world</h1>
-
-      <p>{data}</p>
+      <div>{JSON.stringify(data)}</div>
     </>
   );
 }
